@@ -1,7 +1,24 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+
+	"github.com/TypicalAM/gogoat/apiclient"
+	"github.com/TypicalAM/gogoat/config"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	cfg, err := config.New()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	client := apiclient.NewCaller(*cfg)
+	th, err := client.GetTotalHits()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	th.PrettyPrint()
 }
