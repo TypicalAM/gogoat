@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/TypicalAM/gogoat/config"
 	"github.com/charmbracelet/lipgloss"
@@ -13,6 +14,13 @@ import (
 )
 
 var ErrApi = errors.New("api error")
+
+var ppHeaderStyle = lipgloss.NewStyle().
+	MarginBottom(1).
+	Padding(1, 1, 1, 1).
+	Background(lipgloss.Color("#a7e2a2")).
+	Foreground(lipgloss.Color("#000000")).
+	Bold(true)
 
 type singleErrorData struct {
 	Error string `json:"error"`
@@ -78,22 +86,24 @@ type TotalHits struct {
 	Hits []Hit `json:"hits"`
 }
 
-func (th TotalHits) PrettyPrint() {
-	headerStyle := lipgloss.NewStyle().
-		MarginBottom(1).
-		Padding(1, 1, 1, 1).
-		Background(lipgloss.Color("#a7e2a2")).
-		Foreground(lipgloss.Color("#000000")).
-		Bold(true)
+func (th TotalHits) PrettyPrint() string {
+	var b strings.Builder
 
-	for i, hit := range th.Hits {
-		fmt.Println(lipgloss.JoinHorizontal(
-			lipgloss.Left,
-			headerStyle.Render(fmt.Sprintf("Title: %s, hits: %d, path: %s", hit.Title, hit.Count, hit.Path)),
-			th.Plot(i),
-		))
+	if len(th.Hits) == 0 {
+		b.WriteString(ppHeaderStyle.Render("No hits found"))
+		return b.String()
 	}
 
+	for i, hit := range th.Hits {
+		b.WriteString(lipgloss.JoinHorizontal(
+			lipgloss.Left,
+			ppHeaderStyle.Render(fmt.Sprintf("Title: %s, hits: %d, path: %s", hit.Title, hit.Count, hit.Path)),
+			th.Plot(i),
+		))
+		b.WriteRune('\n')
+	}
+
+	return b.String()
 }
 
 func (c *Caller) GetTotalHits() (*TotalHits, error) {

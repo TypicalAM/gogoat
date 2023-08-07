@@ -17,8 +17,8 @@ func main() {
 	client := apiclient.NewCaller(*cfg)
 	th, err := client.GetTotalHits()
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 
-	th.PrettyPrint()
+	fmt.Println(th.PrettyPrint())
 }
