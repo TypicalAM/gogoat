@@ -1,6 +1,6 @@
 # gogoat
 
-A terminal user interface (TUI) way to view stats from the [goatcounter](https://www.goatcounter.com/). It provides a fast and easy way to check-up on your running website stats.
+A terminal user interface (TUI) way to view stats from the [goatcounter](https://www.goatcounter.com/) website. It provides a fast and easy way to check-up on your running website stats.
 
 ## What's goatcounter
 
