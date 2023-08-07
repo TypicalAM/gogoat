@@ -12,7 +12,7 @@ import (
 	"github.com/guptarohit/asciigraph"
 )
 
-var ApiError = errors.New("api error")
+var ErrApi = errors.New("api error")
 
 type singleErrorData struct {
 	Error string `json:"error"`
@@ -60,18 +60,18 @@ func (c *Caller) GetTotalPageViews() (*TotalPageViews, error) {
 
 type HitData struct {
 	Day    string `json:"day"`
-	Daily  int    `json:"daily"`
 	Hourly []int  `json:"hourly"`
+	Daily  int    `json:"daily"`
 }
 
 type Hit struct {
+	Path   string    `json:"path"`
+	Title  string    `json:"title"`
+	Stats  []HitData `json:"stats"`
 	Count  int       `json:"count"`
 	PathID int       `json:"path_id"`
-	Path   string    `json:"path"`
-	Event  bool      `json:"event"`
-	Title  string    `json:"title"`
 	Max    int       `json:"max"`
-	Stats  []HitData `json:"stats"`
+	Event  bool      `json:"event"`
 }
 
 type TotalHits struct {
@@ -168,7 +168,7 @@ func (c *Caller) getResult(url, method string) ([]byte, error) {
 	if err != nil {
 		err = json.Unmarshal(body, &multipleError)
 		if err != nil {
-			return nil, ApiError
+			return nil, ErrApi
 		}
 	}
 
@@ -177,6 +177,6 @@ func (c *Caller) getResult(url, method string) ([]byte, error) {
 	} else if multipleError.Errors != nil {
 		return nil, fmt.Errorf("api error: %v", multipleError.Errors)
 	} else {
-		return nil, ApiError
+		return nil, ErrApi
 	}
 }
