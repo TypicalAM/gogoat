@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/TypicalAM/gogoat/apiclient"
+	"github.com/TypicalAM/gogoat/client"
 	"github.com/TypicalAM/gogoat/config"
 )
 
@@ -14,7 +14,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	client := apiclient.NewCaller(*cfg)
+	client := client.NewCaller(*cfg)
 	th, err := client.GetTotalHits()
 	if err != nil {
 		log.Fatal(err)
